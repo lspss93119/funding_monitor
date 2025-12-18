@@ -1359,37 +1359,70 @@
             const card = document.getElementById(`card-${symbol}`);
             if (!card) return;
 
-            // Optional: visual feedback
-            const originalBorder = card.style.borderColor;
-            card.style.borderColor = 'var(--gold)';
+            // 1. Extract Data
+            const price = card.querySelector('.price-tag').innerText;
+            const apr = card.querySelector('.hero-value').innerText;
+            // Get action badges text
+            const longText = card.querySelector('.badge-long').innerText;
+            const shortText = card.querySelector('.badge-short').innerText;
 
-            // Add signature
-            const footer = document.createElement('div');
-            footer.innerHTML = "POWERED BY <b>FUNDING MONITOR</b>";
-            footer.style.position = "absolute";
-            footer.style.bottom = "10px";
-            footer.style.right = "20px";
-            footer.style.fontSize = "10px";
-            footer.style.color = "var(--text-tertiary)";
-            footer.style.letterSpacing = "1px";
-            card.appendChild(footer);
+            // 2. Create Temporary Snapshot Container
+            const snapshot = document.createElement('div');
+            snapshot.style.position = 'fixed';
+            snapshot.style.top = '-9999px';
+            snapshot.style.width = '600px'; // Fixed width for consistent output
+            snapshot.style.padding = '40px';
+            snapshot.style.background = getComputedStyle(card).backgroundColor; // Match theme
+            snapshot.style.border = `1px solid ${getComputedStyle(card).borderColor}`;
+            snapshot.style.borderRadius = '16px';
+            snapshot.style.fontFamily = "'JetBrains Mono', monospace";
+            snapshot.style.color = getComputedStyle(document.body).color;
+            snapshot.style.display = 'flex';
+            snapshot.style.flexDirection = 'column';
+            snapshot.style.alignItems = 'center';
+            snapshot.style.justifyContent = 'center';
+            snapshot.style.gap = '20px';
+            snapshot.style.boxShadow = getComputedStyle(card).boxShadow; // Match theme shadow/glow
 
-            html2canvas(card, {
-                backgroundColor: null, // Use transparent or computed style
-                scale: 2 // Retina scale
+            // 3. Build Simplified Content
+            snapshot.innerHTML = `
+                <div style="font-size: 14px; opacity: 0.7; letter-spacing: 2px;">FUNDING ARBITRAGE</div>
+                <div style="font-size: 48px; font-weight: bold; display:flex; align-items:baseline; gap:10px;">
+                    ${symbol} <span style="font-size: 20px; opacity: 0.6; font-weight:normal;">${price}</span>
+                </div>
+                
+                <div style="font-size: 15px; display:flex; gap:15px; margin-top:10px;">
+                    <span style="background:rgba(0, 255, 157, 0.15); color:#00ff9d; padding:5px 12px; border-radius:4px; border:1px solid rgba(0, 255, 157, 0.3);">${longText}</span>
+                    <span style="background:rgba(255, 0, 85, 0.15); color:#ff0055; padding:5px 12px; border-radius:4px; border:1px solid rgba(255, 0, 85, 0.3);">${shortText}</span>
+                </div>
+
+                <div style="margin: 20px 0; text-align: center;">
+                    <div style="font-size: 12px; color: var(--gold); letter-spacing: 1px; margin-bottom:5px;">SPREAD APR</div>
+                    <div style="font-size: 80px; font-weight: bold; color: var(--gold); text-shadow: 0 0 30px rgba(255, 204, 0, 0.3); line-height:1;">
+                        ${apr}
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; font-size: 12px; opacity: 0.4; letter-spacing: 1.5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; width: 100%; text-align: center;">
+                    POWERED BY <b>FUNDING MONITOR</b>
+                </div>
+            `;
+
+            document.body.appendChild(snapshot);
+
+            // 4. Capture
+            html2canvas(snapshot, {
+                backgroundColor: null,
+                scale: 2
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `funding-monitor-${symbol}-${Date.now()}.png`;
+                link.download = `funding-${symbol}-${Date.now()}.png`;
                 link.href = canvas.toDataURL();
                 link.click();
-
-                // Cleanup
-                card.style.borderColor = originalBorder;
-                footer.remove();
+                document.body.removeChild(snapshot);
             }).catch(err => {
-                console.error("Capture failed:", err);
-                card.style.borderColor = originalBorder;
-                footer.remove();
+                console.error(err);
+                document.body.removeChild(snapshot);
             });
         }
 
