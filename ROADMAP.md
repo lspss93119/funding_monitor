@@ -1,56 +1,56 @@
-# Funding Monitor - Future Roadmap Ideas 🚀
+# Funding Monitor - 未來開發藍圖 (Roadmap) 🚀
 
-Here are several directions to further improve the application, ranging from features to technical robustness.
+這裡列出了幾個可以進一步改進應用程式的方向，從功能擴充到技術優化。
 
-## 1. Data & Exchanges (數據源擴展)
-- **Add More Exchanges**: Integrate **Hyperliquid**, **dYdX**, or **Bluefin** to find more cross-exchange opportunities.
-- **Historical Backtesting**: Use the accumulated SQLite data to simulate how much profit could have been made over the last week with specific strategies.
+## 1. 數據源與交易所擴展 (Data & Exchanges)
+- **新增更多交易所**：整合 **Hyperliquid**、**dYdX** 或 **Bluefin**，尋找更多跨交易所的套利機會。
+- **歷史回測 (Backtesting)**：利用累積的 SQLite 數據，模擬如果在過去一週使用特定策略，能獲得多少利潤。
 
-## 2. Trading Integration (交易功能)
-- **"Execute" Button**: Add a button next to the opportunity that opens the exchange's trading page with the pair pre-selected (Deep Linking).
-- **Auto-Execution (Bot)**: Create a Python script (`trader.py`) that uses API keys to automatically open positions when spread > threshold. (High risk/High reward).
+## 2. 交易功能整合 (Trading Integration)
+- **"執行" 按鈕**：在機會旁新增按鈕，點擊後直接開啟交易所並預先選好交易對 (Deep Linking)。
+- **自動化下單 (Bot)**：編寫 Python 腳本 (`trader.py`)，使用 API 金鑰在價差超過門檻時自動開倉。(高風險/高報酬)。
 
-## 3. Notifications & Alerts (通知系統)
-- **Telegram/Discord Bot**: Send alerts to your phone instead of just the desktop browser.
-- **Email Digest**: Daily summary of the best opportunities found.
+## 3. 通知與警報系統 (Notifications & Alerts)
+- **Telegram/Discord 機器人**：將警報發送到您的手機，而不僅僅是桌面瀏覽器通知。
+- **每日摘要 (Email Digest)**：每天發送一封郵件，總結當天發現的最佳機會。
 
-## 4. UI/UX Enhancements (介面優化)
-- **Mobile View**: Create a simplified mobile-specific layout for checking on the go.
-- **Settings Page**: A UI to configure `config.yaml` (add pairs, change thresholds, toggle sounds) without editing code.
-- **Sorting/Filtering**: Allow sorting cards by "Highest APR" or "Symbol Name".
+## 4. 介面優化 (UI/UX Enhancements)
+- **手機版視圖**：建立專為手機設計的簡化版面，方便在外隨時查看。
+- **設定頁面**：提供 UI 介面來設定 `config.yaml` (新增交易對、修改門檻、開關音效)，無需修改程式碼。
+- **排序與過濾**：允許依照 "最高年化 (APR)" 或 "幣種名稱" 對卡片進行排序。
 
-## 5. Technical Improvements (技術優化)
-- **Docker Support**: Add a `Dockerfile` and `docker-compose.yml` for one-click deployment on any server.
-- **Cloud Deployment**: Add a script to deploy to an AWS EC2 free tier instance easily.
-- **Test Coverage**: Add unit tests for the calculation logic to ensure safety.
-- **CSV Export**: A simple "Download Data" button to export your collected historical funding rates for Excel analysis.
-- **Latency Monitor**: Show the API response time (ping) for each exchange to ensure data freshness.
-- **System Health Check**: Visual indicator if database writes are failing or lagging.
+## 5. 技術優化 (Technical Improvements)
+- **Docker 支援**：新增 `Dockerfile` 和 `docker-compose.yml`，實現一鍵部署到任何伺服器。
+- **雲端部署腳本**：提供腳本以輕鬆部署到 AWS EC2 免費層級實例。
+- **單元測試 (Test Coverage)**：為計算邏輯增加單元測試，確保程式碼安全性。
+- **CSV 導出**：新增 "下載數據" 按鈕，將收集到的歷史資金費率匯出為 Excel 進行分析。
+- **延遲監控 (Latency Monitor)**：顯示各交易所 API 的回應時間 (Ping)，確保數據新鮮度。
+- **系統健康檢查**：如果資料庫寫入失敗或延遲，顯示視覺化警告。
 
-## 6. Analytics (數據分析)
-- **Portfolio Tracker**: Input your current position size (e.g., "1 ETH Short"), and see your *actual* estimated hourly income accumulation.
-- **Order Book Depth Check**: Verify if there's enough liquidity to execute a trade without slippage. (Crucial for real trading).
-- **Volatility Filter**: Auto-hide opportunities if the price is crashing/pumping too fast (unsafe to trade).
-- **Correlation Matrix**: Analyze which tokens tend to move together.
-- **Funding Rate Heatmap (Global)**: A view showing the funding rate of ALL coins to find market trends (e.g., "Whole market is Short").
+## 6. 數據分析 (Analytics)
+- **持倉收益追蹤 (Portfolio Tracker)**：輸入您目前的部位大小 (例如 "做空 1 ETH")，查看**實際**累積的每小時預估收益。
+- **訂單簿深度檢查**：驗證是否有足夠的流動性來執行交易而不產生成本滑點。(對實戰至關重要)。
+- **波動率過濾**：如果價格暴漲/暴跌速度過快，自動隱藏機會 (因為此時交易不安全)。
+- **相關性矩陣**：分析哪些代幣的走勢傾向於同步。
+- **全域資金費率熱力圖**：顯示**所有**幣種的資金費率視圖，以發現市場趨勢 (例如 "整個市場都在做空")。
 
-## 7. Fun & Experimental (趣味實驗)
-- **AI Analyst**: Integrate LLM (Gemini/OpenAI) to generate a daily textual report: "Today market is boring, only X gave good returns."
-- **Smart Home (IoT)**: Use a Webhook to turn your Philips Hue lights **Gold** when APR > 50%.
+## 7. 趣味與實驗性功能 (Fun & Experimental)
+- **AI 分析師**：整合 LLM (Gemini/OpenAI) 生成每日文字報告：「今天市場很無聊，只有 X 幣有不錯的回報。」
+- **智慧家居連動 (IoT)**：使用 Webhook，當 APR > 50% 時將您的 Philips Hue 燈泡變成**金色**。
 
-## 8. Gamification & Engagement (遊戲化與互動) 🎮
-- **RPG Leveling System**:
-    - Gain **EXP** for every hour the monitor is active ("Mining" logic).
-    - Level up from *Novice Watcher* → *Arbitrage Hunter* → *Funding Lord*.
-- **Unlockable Skins (Theme Store)**:
-    - Level 5: Unlock **"Cyberpunk 2077"** Neon Theme.
-    - Level 10: Unlock **"Matrix"** Falling Code Background.
-    - Level 20: Unlock **"Street Fighter"** Sound Pack (KO sound on high spread).
-- **Achievement Badges**:
-    - 🏆 **Whale Watcher**: Witness a spread > 100% APR.
-    - 🦉 **Night Owl**: Active monitoring between 3 AM - 5 AM.
-    - 💎 **Diamond Hands**: Keep dashboard open for 24h continuous.
-- **"Catch the Spread" Mini-game**:
-    - When a rare opportunity (>20%) appears, a **Golden Snitch** flies across the screen. Clicking it plays a special animation and records a "High Score".
-- **Daily Leaderboard**:
-    - Record the "Highest APR Seen" today vs. All-Time High. Challenge yourself to beat yesterday's volatility.
+## 8. 遊戲化與互動 (Gamification & Engagement) 🎮
+- **RPG 等級系統**：
+    - 監控程式開啟每小時可獲得 **EXP** (類似"挖礦"邏輯)。
+    - 從 *新手觀察員* → *套利獵人* → *資金費率領主* 一路升級。
+- **可解鎖外觀 (主題商店)**：
+    - 等級 5：解鎖 **"Cyberpunk 2077"** 霓虹主題。
+    - 等級 10：解鎖 **"駭客任務 (Matrix)"** 代碼雨背景。
+    - 等級 20：解鎖 **"快打旋風"** 音效包 (高價差時播放 KO 音效)。
+- **成就徽章 (Badges)**：
+    - 🏆 **鯨魚觀察者**：目擊到 > 100% APR 的價差。
+    - 🦉 **夜貓子**：在凌晨 3 點到 5 點之間活躍監控。
+    - 💎 **鑽石手**：連續 24 小時保持儀表板開啟。
+- **"捕捉價差" 小遊戲**：
+    - 當稀有機會 (>20%) 出現時，畫面飛出一顆 **金探子**。點擊它可播放特效並記錄 "最高分"。
+- **每日排行榜**：
+    - 記錄今天看到的 "最高 APR" vs. 歷史最高紀錄。挑戰自己戰勝昨天的市場波動。
