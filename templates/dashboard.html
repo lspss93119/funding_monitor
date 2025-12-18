@@ -138,60 +138,108 @@
             --gold: #ffcc00;
             --gold-glow: rgba(255, 204, 0, 0.2);
             --accent: #00f2ff;
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
-        /* Theme: Cyberpunk */
+        /* Theme: Cyberpunk (Intense Neon) */
         [data-theme="cyberpunk"] {
-            --bg-color: #050510;
-            --bg-primary: #0a0a20;
-            --card-bg: rgba(20, 20, 40, 0.6);
-            --card-border: rgba(255, 0, 255, 0.3);
+            --bg-color: #020205;
+            /* Pitch dark blue */
+            --bg-primary: #050510;
+            --card-bg: rgba(10, 10, 25, 0.85);
+            --card-border: #ff00ff;
+            /* Hot Pink Border */
             --text-primary: #00f2ff;
+            /* Cyan Text */
             --text-secondary: #ff00ff;
-            --text-tertiary: #5d00ff;
+            /* Magenta Secondary */
+            --text-tertiary: #7124cc;
+            /* Purple */
             --positive: #00ff9d;
             --negative: #ff0055;
             --gold: #ffee00;
+
+            /* Glow Effects */
+            --text-shadow: 0 0 5px rgba(0, 242, 255, 0.5), 0 0 10px rgba(0, 242, 255, 0.3);
+            --card-shadow: 0 0 15px rgba(255, 0, 255, 0.15), inset 0 0 20px rgba(0, 0, 0, 0.5);
+            --font-main: 'JetBrains Mono', monospace;
+            /* Hacker font globally */
         }
 
-        /* Theme: Zen */
+        [data-theme="cyberpunk"] .card {
+            border-width: 1px;
+            box-shadow: var(--card-shadow);
+        }
+
+        [data-theme="cyberpunk"] h1 {
+            text-shadow: 0 0 10px #00f2ff, 0 0 20px #00f2ff;
+        }
+
+        /* Theme: Zen (Soft Paper) */
         [data-theme="zen"] {
-            --bg-color: #e0e5ec;
-            --bg-primary: #f0f4f8;
-            --card-bg: rgba(255, 255, 255, 0.6);
-            --card-border: #ffffff;
-            --text-primary: #485460;
-            --text-secondary: #808e9b;
-            --text-tertiary: #d2dae2;
-            --positive: #0be881;
-            --negative: #ff3f34;
-            --gold: #ffa801;
-            /* Override box shadows for neumorphism feel */
-            --card-shadow: 9px 9px 16px rgb(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);
+            --bg-color: #f4f6f8;
+            --bg-primary: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: transparent;
+            /* No borders, just shadow */
+            --text-primary: #2d3436;
+            --text-secondary: #636e72;
+            --text-tertiary: #b2bec3;
+            --positive: #00b894;
+            /* Mint */
+            --negative: #d63031;
+            /* Soft Red */
+            --gold: #fdcb6e;
+
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --font-main: 'Inter', sans-serif;
         }
 
-        /* Theme: Pro */
+        [data-theme="zen"] .card {
+            box-shadow: var(--card-shadow);
+            border-radius: 24px;
+            /* Softer curves */
+        }
+
+        /* Theme: Pro (Bloomberg Terminal) */
         [data-theme="pro"] {
             --bg-color: #000000;
-            --bg-primary: #121212;
+            --bg-primary: #111111;
             --card-bg: #000000;
-            --card-border: #333333;
-            --text-primary: #ffffff;
-            --text-secondary: #ebd020;
-            /* Bloomberg Yellow */
-            --text-tertiary: #666;
+            --card-border: #ff9f43;
+            /* Orange Border */
+            --text-primary: #f5f6fa;
+            --text-secondary: #ff9f43;
+            /* Orange */
+            --text-tertiary: #57606f;
             --positive: #00ff00;
+            /* Terminal Green */
             --negative: #ff0000;
-            --gold: #ebd020;
+            /* Terminal Red */
+            --gold: #ff9f43;
+
+            --font-main: 'JetBrains Mono', monospace;
+            /* Strictly monospace */
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        [data-theme="pro"] .card {
+            border: 1px solid var(--card-border);
+            border-radius: 0;
+            /* Sharp Edges */
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: var(--font-main);
             margin: 0;
             padding: 40px 20px;
             background-color: var(--bg-color);
             color: var(--text-primary);
             font-size: 14px;
+            text-shadow: var(--text-shadow, none);
+            /* Theme specific text shadow */
+            transition: background 0.5s ease, color 0.5s ease;
         }
 
         .container {
