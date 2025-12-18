@@ -11,8 +11,99 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
         rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        /* Zen Mode Styles */
+        #zen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #1a222c 0%, #0d1117 100%);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, background 2s ease;
+            opacity: 0;
+        }
+
+        #zen-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                opacity: 0.7;
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            }
+
+            50% {
+                opacity: 1;
+                text-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        .zen-symbol {
+            font-family: 'JetBrains Mono';
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 2rem;
+            letter-spacing: 0.2rem;
+            font-weight: 300;
+        }
+
+        .zen-value {
+            font-family: 'Inter', sans-serif;
+            font-size: 18vw;
+            font-weight: 200;
+            /* Thinner font for Zen feel */
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1;
+            text-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+            animation: breathe 6s infinite ease-in-out;
+        }
+
+        .zen-label {
+            font-family: 'JetBrains Mono';
+            font-size: 0.9rem;
+            color: rgba(255, 204, 0, 0.6);
+            /* Muted Gold */
+            margin-top: 2rem;
+            letter-spacing: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .zen-exit {
+            position: absolute;
+            top: 3rem;
+            right: 3rem;
+            color: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 24px;
+            border-radius: 100px;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .zen-exit:hover {
+            color: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
         :root {
             --bg-color: #0b0e11;
+            --bg-primary: #0d1117;
             --card-bg: rgba(22, 27, 34, 0.4);
             --card-border: rgba(255, 255, 255, 0.08);
             --text-primary: #ffffff;
@@ -109,6 +200,53 @@
 
         .sound-icon {
             font-size: 14px;
+        }
+
+        .notify-btn {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .notify-btn.active {
+            color: var(--gold);
+            border-color: var(--gold);
+            background: rgba(255, 204, 0, 0.1);
+        }
+
+        .notify-btn.active {
+            color: var(--gold);
+            border-color: var(--gold);
+            background: rgba(255, 204, 0, 0.1);
+        }
+
+        .threshold-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono';
+            padding: 0 8px;
+            border-left: 1px solid var(--card-border);
+        }
+
+        .threshold-input {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--gold);
+            width: 40px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            text-align: center;
+            font-family: inherit;
         }
 
         /* Grid */
@@ -550,6 +688,17 @@
                 <button class="sound-btn" id="sound-toggle" onclick="toggleSound()">
                     <span class="sound-icon">🔔</span> <span id="sound-status">OFF</span>
                 </button>
+                <button class="notify-btn" id="notify-toggle" onclick="toggleNotify()">
+                    <span>💬</span> <span id="notify-status">Browser Alert</span>
+                </button>
+                <div class="threshold-group">
+                    Alert > <input type="number" class="threshold-input" id="alert-threshold" value="10"
+                        onchange="updateThreshold(this.value)"> %
+                </div>
+                <!-- Zen Toggle -->
+                <button class="notify-btn" onclick="toggleZen()" style="margin-left: 10px;">
+                    <span>🧘</span>
+                </button>
                 <span class="last-scan" id="last-scan">Last Scan: --:--:--</span>
                 <div class="status-badge" id="status-badge">Connecting...</div>
             </div>
@@ -564,6 +713,13 @@
         </div>
     </div>
 
+    <div id="zen-overlay">
+        <div class="zen-exit" onclick="toggleZen()">EXIT ZEN MODE</div>
+        <div class="zen-symbol" id="zen-symbol">WAITING DATA...</div>
+        <div class="zen-value" id="zen-value">--%</div>
+        <div class="zen-label">SPREAD APR</div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const grid = document.getElementById('grid');
@@ -571,12 +727,20 @@
         const lastScanEl = document.getElementById('last-scan');
         const soundBtn = document.getElementById('sound-toggle');
         const soundStatus = document.getElementById('sound-status');
+        const zenOverlay = document.getElementById('zen-overlay');
+        const zenSymbol = document.getElementById('zen-symbol');
+        const zenValue = document.getElementById('zen-value');
 
         // Globals
         let chartInstances = {};
+        let zenMode = false;
+        let lastBestOpp = null; // Specially for Zen Mode instant toggle
         let symbolLimitState = {}; // Store limit preference per symbol: { 'BTC-PERP': 60 }
         let soundEnabled = false;
         let lastAlertTime = 0;
+        let notifyEnabled = false;
+        let lastNotifyTime = 0;
+        let alertThreshold = parseFloat(localStorage.getItem('alertThreshold')) || 10;
         let principalAmount = 10000; // Default Principal
 
         // Constants (polling = 30s)
@@ -586,6 +750,9 @@
             '4H': 480,
             '24H': 2880
         };
+
+        // Init Input
+        document.getElementById('alert-threshold').value = alertThreshold;
 
         // Chart Config
         Chart.defaults.font.family = "'JetBrains Mono', monospace";
@@ -597,9 +764,9 @@
             apr: (v) => ((v || 0) * 24 * 365 * 100).toFixed(2) + '%',
             price: (v) => v ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v) : '--',
             time: (d) => {
-                if (!d) return '--:--:--';
+                if (!d) return '--:----';
                 try { return new Date(d).toLocaleTimeString([], { hour12: false }); }
-                catch (e) { return '--:--:--'; }
+                catch (e) { return '--:----'; }
             },
             money: (v) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v)
         };
@@ -648,14 +815,99 @@
             osc.stop(ctx.currentTime + 0.15);
         }
 
-        function checkAlerts(spreadAPR) {
-            if (!soundEnabled) return;
-            // Cooldown: 60s
-            if (spreadAPR > 10 && (Date.now() - lastAlertTime > 60000)) {
-                playBeep();
-                lastAlertTime = Date.now();
+        // --- Notification Logic ---
+        function toggleNotify() {
+            if (!("Notification" in window)) {
+                alert("Desktop notifications not supported");
+                return;
+            }
+
+            if (!notifyEnabled) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        notifyEnabled = true;
+                        document.getElementById('notify-toggle').classList.add('active');
+                        new Notification("Funding Monitor", { body: "Notifications Enabled!" });
+                    }
+                });
+            } else {
+                notifyEnabled = false;
+                document.getElementById('notify-toggle').classList.remove('active');
             }
         }
+
+        function sendNotification(title, body) {
+            if (notifyEnabled && Notification.permission === "granted") {
+                // Cooldown 60s
+                if (Date.now() - lastNotifyTime > 60000) {
+                    new Notification(title, { body: body });
+                    lastNotifyTime = Date.now();
+                }
+            }
+        }
+
+        function checkAlerts(spreadAPR) {
+            // Sound
+            if (soundEnabled) {
+                if (spreadAPR > alertThreshold && (Date.now() - lastAlertTime > 60000)) {
+                    playBeep();
+                    lastAlertTime = Date.now();
+                }
+            }
+
+            // Notification
+            if (spreadAPR > alertThreshold) {
+                sendNotification("High Spread Alert!", `Spread APR: ${spreadAPR.toFixed(2)}% detected (>${alertThreshold}%).`);
+            }
+        }
+
+        function updateThreshold(val) {
+            alertThreshold = parseFloat(val);
+            localStorage.setItem('alertThreshold', alertThreshold);
+        }
+
+        // --- Zen Mode ---
+        function toggleZen() {
+            zenMode = !zenMode;
+            if (zenMode) zenOverlay.classList.add('active');
+            else zenOverlay.classList.remove('active');
+
+            // Try to update immediately from cache
+            if (zenMode && lastBestOpp) {
+                updateZen(lastBestOpp);
+            }
+        }
+
+        function updateZen(bestData = null) {
+            if (!zenMode) return;
+
+            // If data explicitly passed (from loop), use it. Or if we just toggled, need scan.
+            // Actually, best approach: loop calls this every time.
+
+            if (!bestData) return;
+
+            zenSymbol.textContent = bestData.symbol;
+            zenValue.textContent = bestData.apr.toFixed(2) + '%';
+
+            // Breathing Effect
+            // Base dark blue #0d1117 (13,17,23)
+            // Pulse to Gold #FFCC00 (255, 204, 0) based on APR
+            // Intensity 0 to 1
+            const intensity = Math.min(bestData.apr / 20, 1);
+
+            // Interpolate color roughly (simple overlay alpha)
+            // Low alert: Blueish. High alert: Gold pulse.
+            const alpha = 0.2 + (intensity * 0.3); // 0.2 to 0.5 opacity of gold
+
+            if (bestData.apr > alertThreshold) {
+                zenOverlay.style.background = `rgba(50, 40, 0, ${1})`; // Dark Goldish
+                zenOverlay.style.boxShadow = `inset 0 0 ${100 * intensity}px #ffcc00`;
+            } else {
+                zenOverlay.style.background = '#0d1117';
+                zenOverlay.style.boxShadow = 'none';
+            }
+        }
+
 
         // --- Range Logic ---
         function setRange(symbol, rangeName) {
@@ -1077,8 +1329,18 @@
                 const now = new Date();
                 lastScanEl.textContent = 'Last Scan: ' + now.toLocaleTimeString();
 
+                // Find Best Opportunity for Zen Mode
+                let bestOpp = { symbol: '--', apr: 0 };
+
                 for (const sym of storedKeys) {
                     const existingCard = document.getElementById(`card-${sym}`);
+
+                    // Calc APR for stats
+                    const l = data[sym].Lighter?.funding_rate || 0;
+                    const s = data[sym].StandX?.funding_rate || 0;
+                    const apr = Math.abs(l - s) * 24 * 365 * 100;
+                    if (apr > bestOpp.apr) bestOpp = { symbol: sym, apr: apr };
+
                     if (!existingCard) {
                         // Use insertAdjacentHTML to prevent destroying existing event listeners/canvases
                         grid.insertAdjacentHTML('beforeend', renderCard(sym, data[sym]));
@@ -1173,9 +1435,13 @@
                     }
                 }
 
-                statusBadge.textContent = "SYSTEM ACTIVE";
-                statusBadge.className = "status-badge active";
-                statusBadge.title = "Connected";
+                statusBadge.textContent = 'Active';
+                statusBadge.className = 'status-badge status-active';
+
+                // Update Zen
+                lastBestOpp = bestOpp; // Cache it
+                if (zenMode) updateZen(bestOpp);
+
             } catch (e) {
                 console.error(e);
                 // Show error message in the badge for debugging

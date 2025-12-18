@@ -12,6 +12,8 @@ A real-time dashboard designed to monitor funding rates across decentralized exc
   - **Live Charts**: Tracks funding rate trends and spread divergence.
   - **Heatmap**: Visualizes historical spread intensity by day and hour.
   - **Opportunity Alerts**: Highlights spreads > 10% APR with visual and audio cues.
+  - **Zen Mode (New)**: Immersive full-screen visualization with breathing animation and dynamic background.
+- **Desktop Notifications**: Browser push notifications for high-spread opportunities, allowing background monitoring.
 - **Local Data Persistence**: Stores historical data locally in SQLite for privacy and speed.
 - **Profit Calculator**: Built-in calculator to estimate daily/weekly returns based on principal amount.
 
