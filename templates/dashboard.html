@@ -412,7 +412,8 @@
             border: 1px solid var(--card-border);
             border-radius: 16px;
             padding: 0;
-            overflow: hidden;
+            overflow: visible;
+            /* Allow tooltips and glows to exceed card */
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             transform-style: preserve-3d;
@@ -1814,19 +1815,26 @@
                         let border = 'none';
 
                         if (val > 0) {
-                            // Intensity Logic: 0% -> 20% scale
-                            const intensity = Math.min(val / 20, 1);
+                            // Intuitive Color Scale: Green = Money/Profit
+                            // 0% - 5%: Faint Green (Low interest)
+                            // 5% - 15%: Bright Green (Good interest)
+                            // 15%+: Gold/Yellow (High Profit/Hot)
 
-                            // Color Scale: Green -> Yellow -> Red (Turbo-ish) or Monochromatic
-                            // Let's use a "Hot" scale: Low=Green, Mid=Yellow, High=Red
-                            // Hue: 120 (Green) -> 60 (Yellow) -> 0 (Red)
-                            const hue = 120 - (intensity * 120);
-                            const lightness = 20 + (intensity * 30); // 20% -> 50%
-
-                            color = `hsla(${hue}, 100%, ${lightness}%, 0.8)`;
-
-                            if (val > 20) {
-                                border = '1px solid #fff'; // Highlight extreme
+                            if (val < 5) {
+                                // Low: Faint Green
+                                const alpha = 0.1 + (val / 5) * 0.2; // 0.1 -> 0.3
+                                color = `rgba(0, 255, 65, ${alpha})`;
+                            } else if (val < 15) {
+                                // Mid: Solid Green
+                                const intensity = (val - 5) / 10; // 0 -> 1
+                                // Transition from Green to lighter Green
+                                color = `rgba(${intensity * 50}, 255, 65, 0.8)`;
+                            } else {
+                                // High: Gold/Orange (Hot!)
+                                const intensity = Math.min((val - 15) / 15, 1);
+                                // Green -> Gold (255, 215, 0)
+                                color = `rgba(255, ${200 + intensity * 55}, 0, 0.9)`;
+                                border = '1px solid #fff';
                             }
                         }
 
