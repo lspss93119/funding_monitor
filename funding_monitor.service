@@ -1,0 +1,25 @@
+[Unit]
+Description=Funding Monitor Service
+After=network.target
+
+[Service]
+# User running the script (usually 'ubuntu' for AWS EC2)
+User=ubuntu
+Group=ubuntu
+
+# Directory where you cloned the repo
+WorkingDirectory=/home/ubuntu/funding_monitor
+
+# Environment variables if needed
+# Environment=PYTHONUNBUFFERED=1
+
+# Command to start the app (using full path to python in venv recommended)
+# ExecStart=/usr/bin/python3 main.py
+ExecStart=/home/ubuntu/funding_monitor/venv/bin/python main.py
+
+# Restart config
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
