@@ -1,5 +1,7 @@
 # Funding Rate Monitor & Arbitrage Scanner
 
+[English](README.md) | [繁體中文](README_zh.md)
+
 A real-time dashboard designed to monitor funding rates across decentralized exchanges (Lighter, StandX) and identify high-yield arbitrage opportunities.
 
 ## 🚀 Features

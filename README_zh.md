@@ -1,0 +1,62 @@
+# 資金費率監控與套利掃描器 (Funding Rate Monitor & Arbitrage Scanner)
+
+[English](README.md) | [繁體中文](README_zh.md)
+
+這是一個即時監控儀表板，專為監控去中心化交易所（Lighter, StandX）的資金費率而設計，旨在幫助使用者識別高收益的套利機會。
+
+## 🚀 功能特色
+
+- **即時監控**：每 30 秒自動抓取最新的資金費率。
+- **價差分析**：自動計算交易所之間的價差及年化報酬率 (APY)。
+- **視覺化儀表板**：
+  - **即時走勢圖**：追蹤資金費率趨勢與價差發散情況。
+  - **熱力圖**：以天和小時為單位，視覺化歷史價差強度。
+  - **機會警報**：當價差年化 (APR) 超過 10% 時，提供視覺閃爍與音效提示。
+- **本地數據持久化**：將歷史數據存儲在本地 SQLite 資料庫中，確保隱私與速度。
+- **收益計算器**：內建計算器，可根據本金估算每日/每週的預期收益。
+
+## 🛠️ 支援的交易所
+
+- **Lighter** (訂單簿式 DEX)
+- **StandX** (永續合約 DEX)
+
+## 📦 安裝說明
+
+1.  **複製專案 (Clone)**
+    ```bash
+    git clone https://github.com/lspss93119/funding_monitor.git
+    cd funding_monitor
+    ```
+
+2.  **安裝依賴套件**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **啟動監控程式**
+    ```bash
+    python3 main.py
+    ```
+
+4.  **開啟儀表板**
+    打開瀏覽器並前往：
+    `http://localhost:8080`
+
+## ⚙️ 設定配置
+
+您可以在 `config.yaml` 檔案中調整設定：
+- **Symbols**：新增或移除交易對（例如：`BTC-PERP`）。
+- **Polling Interval**：設定抓取數據的頻率（預設：30秒）。
+- **Thresholds**：調整警報觸發的門檻值。
+
+## 📊 專案結構
+
+- `main.py`: 應用程式的主要入口點。
+- `monitor.py`: 負責抓取與處理數據的核心邏輯。
+- `storage.py`: SQLite 資料庫管理。
+- `templates/dashboard.html`: 前端使用者介面。
+- `exchanges/`: 各交易所的 API 整合模組。
+
+## 📝 授權
+
+本專案僅供個人使用與教育目的。
