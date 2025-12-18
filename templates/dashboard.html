@@ -954,6 +954,8 @@
         <div class="zen-label" data-i18n="zen_label">SPREAD APR</div>
     </div>
 
+    <!-- Capture Logic -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const grid = document.getElementById('grid');
@@ -1352,6 +1354,45 @@
         }
 
 
+        // --- Capture Logic ---
+        function captureCard(symbol) {
+            const card = document.getElementById(`card-${symbol}`);
+            if (!card) return;
+
+            // Optional: visual feedback
+            const originalBorder = card.style.borderColor;
+            card.style.borderColor = 'var(--gold)';
+
+            // Add signature
+            const footer = document.createElement('div');
+            footer.innerHTML = "POWERED BY <b>FUNDING MONITOR</b>";
+            footer.style.position = "absolute";
+            footer.style.bottom = "10px";
+            footer.style.right = "20px";
+            footer.style.fontSize = "10px";
+            footer.style.color = "var(--text-tertiary)";
+            footer.style.letterSpacing = "1px";
+            card.appendChild(footer);
+
+            html2canvas(card, {
+                backgroundColor: null, // Use transparent or computed style
+                scale: 2 // Retina scale
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `funding-monitor-${symbol}-${Date.now()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+
+                // Cleanup
+                card.style.borderColor = originalBorder;
+                footer.remove();
+            }).catch(err => {
+                console.error("Capture failed:", err);
+                card.style.borderColor = originalBorder;
+                footer.remove();
+            });
+        }
+
         // --- Range Logic ---
         function setRange(symbol, rangeName) {
             const limit = RANGES[rangeName];
@@ -1446,6 +1487,13 @@
                     0).toFixed(2)}%</span>
                             </div>
                         </div>
+                        
+                         <!-- Snapshot Button -->
+                         <button class="range-btn" style="margin-top: 8px; font-size: 10px; display: flex; align-items: center; gap: 4px;" 
+                                onclick="captureCard('${symbol}')" data-tooltip="Save Highlight Image">
+                             <span>📸</span> <span data-i18n="btn_snapshot">Save Image</span>
+                         </button>
+
                     </div>
                     <div class="hero-stat">
                         <div class="header-label" data-i18n="zen_label">${t('zen_label')}</div>
