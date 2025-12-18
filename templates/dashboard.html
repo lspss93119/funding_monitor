@@ -889,26 +889,6 @@
             .chart-controls {
                 padding: 10px 16px 0 16px;
             }
-
-            .snapshot-btn {
-                background: transparent;
-                border: 1px solid transparent;
-                color: var(--text-tertiary);
-                cursor: pointer;
-                padding: 4px;
-                border-radius: 50%;
-                transition: all 0.2s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 14px;
-            }
-
-            .snapshot-btn:hover {
-                color: var(--text-primary);
-                background: rgba(255, 255, 255, 0.1);
-                border-color: var(--card-border);
-            }
         }
     </style>
 </head>
@@ -1543,11 +1523,14 @@
                             </div>
                         </div>
                         
-                    <div class="hero-stat" style="position:relative;">
-                        <button class="snapshot-btn" style="position:absolute; top: -5px; right: -5px;" 
-                                onclick="captureCard('${symbol}')" data-tooltip="Snapshot">
-                             📸
-                        </button>
+                         <!-- Snapshot Button -->
+                         <button class="range-btn" style="margin-top: 8px; font-size: 10px; display: flex; align-items: center; gap: 4px;" 
+                                onclick="captureCard('${symbol}')" data-tooltip="Save Highlight Image">
+                             <span>📸</span> <span data-i18n="btn_snapshot">Save Image</span>
+                         </button>
+
+                    </div>
+                    <div class="hero-stat">
                         <div class="header-label" data-i18n="zen_label">${t('zen_label')}</div>
                         <div class="hero-value ${heroColorClass}">
                             ${spreadAPR.toFixed(2)}%
