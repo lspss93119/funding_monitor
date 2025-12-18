@@ -860,6 +860,12 @@
 
             .card-header {
                 padding: 16px;
+                position: relative;
+                /* Ensure absolute children stay inside */
+                display: flex;
+                /* Ensure flex behavior if missing */
+                justify-content: space-between;
+                align-items: flex-start;
             }
 
             .asset-name {
@@ -888,6 +894,31 @@
 
             .chart-controls {
                 padding: 10px 16px 0 16px;
+            }
+
+            .snapshot-btn {
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                background: transparent;
+                border: 1px solid transparent;
+                color: var(--text-tertiary);
+                cursor: pointer;
+                padding: 6px;
+                border-radius: 50%;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                z-index: 10;
+            }
+
+            .snapshot-btn:hover {
+                color: var(--text-primary);
+                background: rgba(255, 255, 255, 0.1);
+                border-color: var(--card-border);
+                box-shadow: 0 0 10px var(--gold-glow);
             }
         }
     </style>
@@ -1523,12 +1554,6 @@
                             </div>
                         </div>
                         
-                         <!-- Snapshot Button -->
-                         <button class="range-btn" style="margin-top: 8px; font-size: 10px; display: flex; align-items: center; gap: 4px;" 
-                                onclick="captureCard('${symbol}')" data-tooltip="Save Highlight Image">
-                             <span>📸</span> <span data-i18n="btn_snapshot">Save Image</span>
-                         </button>
-
                     </div>
                     <div class="hero-stat">
                         <div class="header-label" data-i18n="zen_label">${t('zen_label')}</div>
@@ -1541,6 +1566,11 @@
                                 style="font-family: 'JetBrains Mono'; color: var(--text-primary);">--:--</span>
                         </div>
                     </div>
+                    
+                    <!-- Snapshot Button (Absolute Top-Right) -->
+                    <button class="snapshot-btn" onclick="captureCard('${symbol}')" data-tooltip="Snapshot">
+                        📸
+                    </button>
                 </div>
 
                 <div class="card-content">
