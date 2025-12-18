@@ -82,6 +82,24 @@
             text-transform: uppercase;
         }
 
+        /* Money Printer Styles */
+        .money-particle {
+            position: fixed;
+            top: -50px;
+            font-size: 24px;
+            z-index: 10000;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+
+
+
         .zen-exit {
             position: absolute;
             top: 3rem;
@@ -247,6 +265,29 @@
             border-radius: 4px;
             text-align: center;
             font-family: inherit;
+        }
+
+        .threshold-input {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--gold);
+            width: 40px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            text-align: center;
+            font-family: inherit;
+        }
+
+        .sound-select {
+            background: #0d1117;
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono';
+            font-size: 11px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            cursor: pointer;
         }
 
         /* Grid */
@@ -789,18 +830,26 @@
         // --- Sound Logic ---
         function toggleSound() {
             soundEnabled = !soundEnabled;
+            // Resume Audio Context on click to unlock autoplay policy
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (ctx.state === 'suspended') ctx.resume();
+
             if (soundEnabled) {
                 soundBtn.classList.add('active');
                 soundStatus.textContent = "ON";
-                playBeep(); // Test sound
+                playBeep(ctx); // Test sound
             } else {
                 soundBtn.classList.remove('active');
                 soundStatus.textContent = "OFF";
             }
         }
 
-        function playBeep() {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        function playBeep(ctx) {
+            // If ctx not provided (from checkAlerts), create one
+            if (!ctx) {
+                ctx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
             const osc = ctx.createOscillator();
             const gain = ctx.createGain();
 
@@ -813,6 +862,21 @@
 
             osc.start();
             osc.stop(ctx.currentTime + 0.15);
+        }
+
+        function checkAlerts(spreadAPR) {
+            // Sound
+            if (soundEnabled) {
+                if (spreadAPR > alertThreshold && (Date.now() - lastAlertTime > 60000)) {
+                    playBeep();
+                    lastAlertTime = Date.now();
+                }
+            }
+
+            // Notification
+            if (spreadAPR > alertThreshold) {
+                sendNotification("High Spread Alert!", `Spread APR: ${spreadAPR.toFixed(2)}% detected (>${alertThreshold}%).`);
+            }
         }
 
         // --- Notification Logic ---
@@ -864,6 +928,48 @@
         function updateThreshold(val) {
             alertThreshold = parseFloat(val);
             localStorage.setItem('alertThreshold', alertThreshold);
+        }
+
+        // --- Money Printer ---
+        function createMoneyRain() {
+            const emojis = ['💸', '💵', '💰', '💎', '🚀'];
+            const particle = document.createElement('div');
+            particle.className = 'money-particle';
+            particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+            // Random start position
+            particle.style.left = Math.random() * 100 + 'vw';
+
+            // Random size variation
+            const size = Math.random() * 20 + 20; // 20-40px
+            particle.style.fontSize = size + 'px';
+
+            // Random duration
+            const duration = Math.random() * 2 + 3; // 3-5s
+            particle.style.animationDuration = duration + 's';
+
+            document.body.appendChild(particle);
+
+            // Cleanup
+            setTimeout(() => {
+                particle.remove();
+            }, duration * 1000);
+        }
+
+        let moneyInterval = null;
+
+        function checkMoneyPrinter(apr) {
+            // Trigger if APR > 50% (Rich Mode)
+            if (apr > 30) {
+                if (!moneyInterval) {
+                    moneyInterval = setInterval(createMoneyRain, 200); // 5 particles per sec
+                }
+            } else {
+                if (moneyInterval) {
+                    clearInterval(moneyInterval);
+                    moneyInterval = null;
+                }
+            }
         }
 
         // --- Zen Mode ---
@@ -1441,6 +1547,9 @@
                 // Update Zen
                 lastBestOpp = bestOpp; // Cache it
                 if (zenMode) updateZen(bestOpp);
+
+                // Check Money Printer
+                checkMoneyPrinter(bestOpp.apr);
 
             } catch (e) {
                 console.error(e);
