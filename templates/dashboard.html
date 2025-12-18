@@ -964,6 +964,10 @@
                         data-tooltip="Switch Theme">
                         <span>🎨</span>
                     </button>
+                    <button class="notify-btn tooltip-btn" id="snap-toggle" onclick="captureCard()"
+                        data-tooltip="Snapshot Best Opportunity">
+                        <span>📸</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -1386,7 +1390,17 @@
 
 
         // --- Capture Logic ---
-        function captureCard(symbol) {
+        function captureCard(symbol = null) {
+            // If no symbol passed (global button), try lastBestOpp
+            if (!symbol) {
+                if (lastBestOpp && lastBestOpp.symbol) {
+                    symbol = lastBestOpp.symbol;
+                } else {
+                    alert("No data available to snapshot yet.");
+                    return;
+                }
+            }
+
             const card = document.getElementById(`card-${symbol}`);
             if (!card) return;
 
@@ -1626,12 +1640,6 @@
                                 onclick="toggleView('${symbol}', 'chart')" data-i18n="btn_chart">${t('btn_chart')}</button>
                             <button class="range-btn" data-view="heatmap"
                                 onclick="toggleView('${symbol}', 'heatmap')" data-i18n="btn_heatmap">${t('btn_heatmap')}</button>
-                            
-                            <!-- Snapshot Button (Integrated) -->
-                            <button class="range-btn" onclick="captureCard('${symbol}')" data-tooltip="Save Highlight Image"
-                                style="display:flex; align-items:center; justify-content:center; padding: 4px 8px;">
-                                📸
-                            </button>
                         </div>
 
                         <button class="range-btn active" data-range="30M"
