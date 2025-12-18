@@ -1505,11 +1505,12 @@
 
             // 2. Create Temporary Snapshot Container
             const snapshot = document.createElement('div');
-            snapshot.style.position = 'fixed';
-            snapshot.style.top = '-9999px';
-            snapshot.style.width = '600px'; // Fixed width for consistent output
+            snapshot.style.position = 'fixed'; // Use fixed to ensure it renders relative to viewport if needed
+            snapshot.style.left = '-9999px';   // Move off-screen horizontally
+            snapshot.style.top = '0';
+            snapshot.style.width = '600px';
             snapshot.style.padding = '40px';
-            snapshot.style.background = getComputedStyle(card).backgroundColor; // Match theme
+            snapshot.style.background = getComputedStyle(card).backgroundColor;
             snapshot.style.border = `1px solid ${getComputedStyle(card).borderColor}`;
             snapshot.style.borderRadius = '16px';
             snapshot.style.fontFamily = "'JetBrains Mono', monospace";
@@ -1519,7 +1520,8 @@
             snapshot.style.alignItems = 'center';
             snapshot.style.justifyContent = 'center';
             snapshot.style.gap = '20px';
-            snapshot.style.boxShadow = getComputedStyle(card).boxShadow; // Match theme shadow/glow
+            snapshot.style.boxShadow = getComputedStyle(card).boxShadow;
+            snapshot.style.zIndex = '9999'; // Ensure it's on top of everything (even if offscreen)
 
             // 3. Build Simplified Content
             snapshot.innerHTML = `
@@ -1552,14 +1554,17 @@
             // 4. Capture
             html2canvas(snapshot, {
                 backgroundColor: null,
-                scale: 2
+                scale: 2,
+                logging: true, // Enable logging for debug
+                useCORS: true  // Handle any potential external font/image issues
             }).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
-                showSnapshotModal(imgData, symbol); // Show modal instead of auto download
+                showSnapshotModal(imgData, symbol);
                 document.body.removeChild(snapshot);
             }).catch(err => {
-                console.error(err);
-                document.body.removeChild(snapshot);
+                console.error("Snapshot failed:", err);
+                alert("Snapshot failed. Check console for details: " + err);
+                if (document.body.contains(snapshot)) document.body.removeChild(snapshot);
             });
         }
 
