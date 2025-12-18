@@ -140,6 +140,51 @@
             --accent: #00f2ff;
         }
 
+        /* Theme: Cyberpunk */
+        [data-theme="cyberpunk"] {
+            --bg-color: #050510;
+            --bg-primary: #0a0a20;
+            --card-bg: rgba(20, 20, 40, 0.6);
+            --card-border: rgba(255, 0, 255, 0.3);
+            --text-primary: #00f2ff;
+            --text-secondary: #ff00ff;
+            --text-tertiary: #5d00ff;
+            --positive: #00ff9d;
+            --negative: #ff0055;
+            --gold: #ffee00;
+        }
+
+        /* Theme: Zen */
+        [data-theme="zen"] {
+            --bg-color: #e0e5ec;
+            --bg-primary: #f0f4f8;
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --card-border: #ffffff;
+            --text-primary: #485460;
+            --text-secondary: #808e9b;
+            --text-tertiary: #d2dae2;
+            --positive: #0be881;
+            --negative: #ff3f34;
+            --gold: #ffa801;
+            /* Override box shadows for neumorphism feel */
+            --card-shadow: 9px 9px 16px rgb(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Theme: Pro */
+        [data-theme="pro"] {
+            --bg-color: #000000;
+            --bg-primary: #121212;
+            --card-bg: #000000;
+            --card-border: #333333;
+            --text-primary: #ffffff;
+            --text-secondary: #ebd020;
+            /* Bloomberg Yellow */
+            --text-tertiary: #666;
+            --positive: #00ff00;
+            --negative: #ff0000;
+            --gold: #ebd020;
+        }
+
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             margin: 0;
@@ -835,6 +880,10 @@
                     <button class="notify-btn tooltip-btn" id="lang-toggle" onclick="toggleLanguage()"
                         data-tooltip="Switch Language (EN/ZH)">
                         <span>🌐</span>
+                    </button>
+                    <button class="notify-btn tooltip-btn" id="theme-toggle" onclick="toggleTheme()"
+                        data-tooltip="Switch Theme">
+                        <span>🎨</span>
                     </button>
                 </div>
             </div>
