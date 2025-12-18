@@ -8,10 +8,16 @@
 - **安全群組 (Security Group)**：確保您的安全群組 "Inbound Rules" 已開啟 **Port 8080** (Custom TCP)，這樣您才能從瀏覽器看到儀表板。
 
 ## 1. 連線到您的 EC2
-打開終端機 (Terminal)，使用 SSH 連入您的伺服器：
-```bash
-ssh -i "your-key.pem" ubuntu@your-ec2-ip-address
-```
+1. **設定金鑰權限** (重要！否則會報錯 `Permissions 0644 too open`)：
+   ```bash
+   chmod 400 "your-key.pem"
+   ```
+
+2. **連線伺服器**：
+   打開終端機 (Terminal)，使用 SSH 連入您的伺服器：
+   ```bash
+   ssh -i "your-key.pem" ubuntu@your-ec2-ip-address
+   ```
 
 ## 2. 安裝系統套件
 更新系統並安裝 Python 相關工具：
