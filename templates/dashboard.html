@@ -1567,10 +1567,8 @@
                         </div>
                     </div>
                     
-                    <!-- Snapshot Button (Absolute Top-Right) -->
-                    <button class="snapshot-btn" onclick="captureCard('${symbol}')" data-tooltip="Snapshot">
-                        📸
-                    </button>
+                    </div>
+                    
                 </div>
 
                 <div class="card-content">
@@ -1628,6 +1626,12 @@
                                 onclick="toggleView('${symbol}', 'chart')" data-i18n="btn_chart">${t('btn_chart')}</button>
                             <button class="range-btn" data-view="heatmap"
                                 onclick="toggleView('${symbol}', 'heatmap')" data-i18n="btn_heatmap">${t('btn_heatmap')}</button>
+                            
+                            <!-- Snapshot Button (Integrated) -->
+                            <button class="range-btn" onclick="captureCard('${symbol}')" data-tooltip="Save Highlight Image"
+                                style="display:flex; align-items:center; justify-content:center; padding: 4px 8px;">
+                                📸
+                            </button>
                         </div>
 
                         <button class="range-btn active" data-range="30M"
