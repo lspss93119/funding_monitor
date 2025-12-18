@@ -1,6 +1,6 @@
 import aiosqlite
 import logging
-import os
+
 from datetime import datetime
 from typing import List, Dict, Any
 from models import FundingData

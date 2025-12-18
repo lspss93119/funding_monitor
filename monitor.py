@@ -1,6 +1,6 @@
 import asyncio
 import logging
-import json
+
 from aiohttp import web
 from typing import List, Dict
 from datetime import datetime
