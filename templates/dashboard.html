@@ -996,11 +996,22 @@
         };
 
         let currentLang = localStorage.getItem('lang') || 'en';
+        let currentTheme = localStorage.getItem('theme') || 'default';
+        const THEMES = ['default', 'cyberpunk', 'zen', 'pro'];
 
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
             localStorage.setItem('lang', currentLang);
             updateLanguage();
+        }
+
+        function toggleTheme() {
+            const currentIndex = THEMES.indexOf(currentTheme);
+            const nextIndex = (currentIndex + 1) % THEMES.length;
+            currentTheme = THEMES[nextIndex];
+
+            document.body.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('theme', currentTheme);
         }
 
         function t(key) {
@@ -1036,6 +1047,10 @@
         }
 
         // Init
+        // Apply saved theme immediately
+        if (currentTheme !== 'default') {
+            document.body.setAttribute('data-theme', currentTheme);
+        }
         updateLanguage();
 
         // Constants (polling = 30s)
