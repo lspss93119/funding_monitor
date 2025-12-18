@@ -14,6 +14,9 @@ A real-time dashboard designed to monitor funding rates across decentralized exc
   - **Opportunity Alerts**: Highlights spreads > 10% APR with visual and audio cues.
   - **Zen Mode (New)**: Immersive full-screen visualization with breathing animation and dynamic background.
 - **Desktop Notifications**: Browser push notifications for high-spread opportunities, allowing background monitoring.
+- **Multi-language Support**: Built-in English/Chinese switching via the globe icon in the header.
+- **Custom Alert Thresholds**: Adjust the APR alert threshold directly from the dashboard (default 10%).
+- **Rich Interactive Experience**: Includes Mario Coin sound alerts, visual tooltips, and dynamic color changes.
 - **Local Data Persistence**: Stores historical data locally in SQLite for privacy and speed.
 - **Profit Calculator**: Built-in calculator to estimate daily/weekly returns based on principal amount.
 
