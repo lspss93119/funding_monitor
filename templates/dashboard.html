@@ -145,26 +145,26 @@
         /* Theme: Cyberpunk (Intense Neon) */
         [data-theme="cyberpunk"] {
             --bg-color: #020205;
-            /* Pitch dark blue */
-            --bg-primary: #050510;
-            --card-bg: rgba(10, 10, 25, 0.85);
-            --card-border: #ff00ff;
-            /* Hot Pink Border */
-            --text-primary: #00f2ff;
-            /* Cyan Text */
-            --text-secondary: #ff00ff;
-            /* Magenta Secondary */
+            /* Deep Void */
+            --bg-primary: #090910;
+            --card-bg: rgba(9, 9, 16, 0.9);
+            --card-border: #BC13FE;
+            /* Electric Purple */
+            --text-primary: #00F0FF;
+            /* Cyber Cyan */
+            --text-secondary: #ff0055;
             --text-tertiary: #7124cc;
-            /* Purple */
-            --positive: #00ff9d;
-            --negative: #ff0055;
-            --gold: #ffee00;
+            /* Deep Purple */
+            --positive: #00F0FF;
+            /* Cyan for positive */
+            --negative: #FF0055;
+            /* Pink for negative */
+            --gold: #FIEE00;
+            /* Acid Yellow */
 
-            /* Glow Effects */
-            --text-shadow: 0 0 5px rgba(0, 242, 255, 0.5), 0 0 10px rgba(0, 242, 255, 0.3);
-            --card-shadow: 0 0 15px rgba(255, 0, 255, 0.15), inset 0 0 20px rgba(0, 0, 0, 0.5);
+            --text-shadow: 0 0 5px rgba(0, 240, 255, 0.7), 0 0 15px rgba(0, 240, 255, 0.3);
+            --card-shadow: 0 0 20px rgba(255, 0, 85, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.8);
             --font-main: 'JetBrains Mono', monospace;
-            /* Hacker font globally */
         }
 
         [data-theme="cyberpunk"] .card {
@@ -205,23 +205,23 @@
         /* Theme: Pro (Bloomberg Terminal) */
         [data-theme="pro"] {
             --bg-color: #000000;
-            --bg-primary: #111111;
-            --card-bg: #000000;
-            --card-border: #ff9f43;
-            /* Orange Border */
-            --text-primary: #f5f6fa;
-            --text-secondary: #ff9f43;
-            /* Orange */
-            --text-tertiary: #57606f;
-            --positive: #00ff00;
-            /* Terminal Green */
-            --negative: #ff0000;
-            /* Terminal Red */
-            --gold: #ff9f43;
+            --bg-primary: #050505;
+            --card-bg: rgba(0, 10, 0, 0.9);
+            --card-border: #008F11;
+            /* Matrix Green Dark */
+            --text-primary: #00FF41;
+            /* Matrix Green Bright */
+            --text-secondary: #008F11;
+            /* Matrix Green Dark */
+            --text-tertiary: #003B00;
+            --positive: #00FF41;
+            --negative: #FF0055;
+            /* Keep red for contrast */
+            --gold: #FFFFFF;
 
             --font-main: 'JetBrains Mono', monospace;
-            /* Strictly monospace */
-            --font-mono: 'JetBrains Mono', monospace;
+            --text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+            --card-shadow: 0 0 15px rgba(0, 255, 65, 0.15), inset 0 0 20px rgba(0, 255, 65, 0.05);
         }
 
         [data-theme="pro"] .card {
@@ -765,12 +765,26 @@
         .heatmap-container {
             display: none;
             /* Hidden by default */
-            grid-template-columns: 30px repeat(24, 1fr);
-            grid-template-rows: repeat(7, 1fr);
+            grid-template-columns: 40px repeat(24, 1fr);
+            /* Fixed Label + Flexible Hours */
+            grid-template-rows: 20px repeat(7, 1fr);
+            /* Header + 7 Days */
             gap: 2px;
             padding: 10px 24px 20px 24px;
-            height: 220px;
+            height: auto;
+            /* Let it grow */
             box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .hm-header-label {
+            font-size: 9px;
+            color: var(--text-tertiary);
+            text-align: center;
+            align-self: center;
+            font-family: 'JetBrains Mono';
         }
 
         .heatmap-container.active {
@@ -807,6 +821,32 @@
             z-index: 20;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
             margin-bottom: 5px;
+        }
+
+        .hm-tooltip {
+            position: absolute;
+            background: rgba(13, 17, 23, 0.95);
+            border: 1px solid var(--card-border);
+            padding: 4px 8px;
+            color: var(--text-primary);
+            border-radius: 4px;
+            white-space: nowrap;
+            font-family: 'JetBrains Mono';
+            font-size: 11px;
+            pointer-events: none;
+            z-index: 20;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            margin-bottom: 5px;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
         .hm-label {
@@ -860,12 +900,6 @@
 
             .card-header {
                 padding: 16px;
-                position: relative;
-                /* Ensure absolute children stay inside */
-                display: flex;
-                /* Ensure flex behavior if missing */
-                justify-content: space-between;
-                align-items: flex-start;
             }
 
             .asset-name {
@@ -895,113 +929,12 @@
             .chart-controls {
                 padding: 10px 16px 0 16px;
             }
-
-            .snapshot-btn {
-                position: absolute;
-                top: 12px;
-                right: 12px;
-                background: transparent;
-                border: 1px solid transparent;
-                color: var(--text-tertiary);
-                cursor: pointer;
-                padding: 6px;
-                border-radius: 50%;
-                transition: all 0.2s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 16px;
-                z-index: 10;
-            }
-
-            .snapshot-btn:hover {
-                color: var(--text-primary);
-                background: rgba(255, 255, 255, 0.1);
-                border-color: var(--card-border);
-                box-shadow: 0 0 10px var(--gold-glow);
-            }
-
-            /* Snapshot Modal */
-            .modal-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.85);
-                backdrop-filter: blur(5px);
-                z-index: 2000;
-                display: none;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-
-            .modal-overlay.active {
-                display: flex;
-                opacity: 1;
-            }
-
-            .modal-content {
-                background: var(--card-bg);
-                padding: 2px;
-                border-radius: 16px;
-                border: 1px solid var(--card-border);
-                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-                max-width: 90%;
-                max-height: 80%;
-                overflow: hidden;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .modal-content img {
-                max-width: 100%;
-                max-height: 70vh;
-                border-radius: 14px;
-                display: block;
-            }
-
-            .modal-actions {
-                margin-top: 20px;
-                display: flex;
-                gap: 16px;
-            }
-
-            .action-btn {
-                padding: 10px 24px;
-                border-radius: 8px;
-                font-family: 'JetBrains Mono';
-                font-size: 14px;
-                cursor: pointer;
-                border: 1px solid var(--card-border);
-                background: var(--card-bg);
-                color: var(--text-primary);
-                transition: all 0.2s;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .action-btn.primary {
-                background: var(--gold);
-                color: #000;
-                border-color: var(--gold);
-                font-weight: bold;
-            }
-
-            .action-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            }
         }
     </style>
 </head>
 
 <body>
+    <canvas id="bg-canvas"></canvas>
     <div class="container">
         <div class="header">
             <div class="header-left">
@@ -1041,10 +974,6 @@
                         data-tooltip="Switch Theme">
                         <span>🎨</span>
                     </button>
-                    <button class="notify-btn tooltip-btn" id="snap-toggle" onclick="captureCard()"
-                        data-tooltip="Snapshot Best Opportunity">
-                        <span>📸</span>
-                    </button>
                 </div>
             </div>
         </div>
@@ -1066,23 +995,6 @@
         <div class="zen-label" data-i18n="zen_label">SPREAD APR</div>
     </div>
 
-    <!-- Snapshot Preview Modal -->
-    <div id="snapshot-modal" class="modal-overlay">
-        <div class="modal-content">
-            <img id="snapshot-preview" src="" alt="Snapshot Preview">
-        </div>
-        <div class="modal-actions">
-            <button class="action-btn" onclick="closeSnapshotModal()">
-                <span>❌</span> <span data-i18n="btn_close">Close</span>
-            </button>
-            <button class="action-btn primary" onclick="downloadSnapshot()">
-                <span>💾</span> <span data-i18n="btn_download">Download</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Capture Logic -->
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const grid = document.getElementById('grid');
@@ -1189,7 +1101,181 @@
 
             document.body.setAttribute('data-theme', currentTheme);
             localStorage.setItem('theme', currentTheme);
+
+            BackgroundFX.setTheme(currentTheme);
         }
+
+        // --- Background FX Logic ---
+        const BackgroundFX = {
+            canvas: null,
+            ctx: null,
+            width: 0,
+            height: 0,
+            animId: null,
+            theme: 'default',
+            drops: [],
+            speeds: [],
+
+            init: function () {
+                this.canvas = document.getElementById('bg-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+            },
+
+            resize: function () {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+                this.canvas.width = this.width;
+                this.canvas.height = this.height;
+                // Reset drops on resize to avoid glitch
+                this.initDrops();
+            },
+
+            setTheme: function (newTheme) {
+                this.theme = newTheme;
+                this.initDrops();
+                if (this.animId) cancelAnimationFrame(this.animId);
+
+                if (newTheme === 'pro' || newTheme === 'cyberpunk' || newTheme === 'zen') {
+                    this.loop();
+                } else {
+                    this.ctx.clearRect(0, 0, this.width, this.height);
+                }
+            },
+
+            initDrops: function () {
+                this.drops = [];
+                this.speeds = [];
+
+                if (this.theme === 'zen') {
+                    // Cherry Blossom Particles (x, y, size, speed, sway, angle)
+                    const count = 50; // Not too many to keep it zen
+                    for (let i = 0; i < count; i++) {
+                        this.drops.push({
+                            x: Math.random() * this.width,
+                            y: Math.random() * this.height,
+                            size: Math.random() * 5 + 3,
+                            speed: Math.random() * 1 + 0.5,
+                            sway: Math.random() * 2 + 0.5,
+                            angle: Math.random() * Math.PI * 2
+                        });
+                    }
+                } else {
+                    // Matrix / Cyberpunk Columns
+                    const columns = Math.floor(this.width / 20);
+                    for (let i = 0; i < columns; i++) {
+                        this.drops[i] = Math.random() * -100;
+                        this.speeds[i] = 0.5 + Math.random() * 1.5;
+                    }
+                }
+            },
+
+            loop: function () {
+                if (this.theme === 'default') return;
+
+                // --- Shared Clear Logic ---
+                if (this.theme === 'zen') {
+                    this.ctx.clearRect(0, 0, this.width, this.height); // Full clear for zen (no trails)
+                }
+                else {
+                    // Trails for Pro/Cyberpunk
+                    if (this.theme === 'pro') {
+                        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                    } else if (this.theme === 'cyberpunk') {
+                        this.ctx.fillStyle = 'rgba(5, 0, 10, 0.1)';
+                    }
+                    this.ctx.fillRect(0, 0, this.width, this.height);
+                }
+
+                this.ctx.font = '14px "JetBrains Mono"';
+
+                if (this.theme === 'pro') {
+                    // Matrix Green Palette
+                    this.ctx.shadowBlur = 0; // Performance
+                    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZDOMHTXMATRIXｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ';
+
+                    for (let i = 0; i < this.drops.length; i++) {
+                        const char = chars.charAt(Math.floor(Math.random() * chars.length));
+
+                        // Randomize green brightness
+                        if (Math.random() > 0.95) {
+                            this.ctx.fillStyle = '#fff';
+                        } else {
+                            this.ctx.fillStyle = '#00FF41';
+                        }
+
+                        this.ctx.fillText(char, i * 20, this.drops[i] * 20);
+
+                        if (this.drops[i] * 20 > this.height && Math.random() > 0.975) {
+                            this.drops[i] = 0;
+                        }
+                        this.drops[i]++;
+                    }
+                } else if (this.theme === 'cyberpunk') {
+                    // Neon Rain (Variable Speed + Glitch Colors)
+                    const colors = ['#00F0FF', '#FF0055', '#BC13FE', '#FIEE00']; // Cyan, Pink, Purple, Yellow
+
+                    for (let i = 0; i < this.drops.length; i++) {
+                        // Use stored speed or default
+                        const speed = this.speeds[i] || 1;
+
+                        // Glitchy color selection
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        this.ctx.fillStyle = color;
+
+                        // Add glow for Cyberpunk
+                        // Note: shadowBlur is expensive, use sparingly or simulate with alpha
+                        // this.ctx.shadowBlur = 5;
+                        // this.ctx.shadowColor = color;
+
+                        const text = Math.random() > 0.8 ? '1' : '0';
+                        // Occasional "Glitch" character (Katakana or blocked)
+                        const char = Math.random() > 0.98 ? String.fromCharCode(0x30A0 + Math.random() * 96) : text;
+
+                        this.ctx.fillText(char, i * 20, this.drops[i] * 20);
+
+                        if (this.drops[i] * 20 > this.height && Math.random() > 0.95) {
+                            this.drops[i] = 0;
+                            // Randomize speed for next fall (0.5 to 2.0)
+                            this.speeds[i] = 0.5 + Math.random() * 1.5;
+                        }
+                        this.drops[i] += speed;
+                    }
+                } else if (this.theme === 'zen') {
+                    // Cherry Blossom Render
+                    this.ctx.fillStyle = 'rgba(255, 182, 193, 0.6)'; // Soft Pink
+
+                    for (let i = 0; i < this.drops.length; i++) {
+                        const p = this.drops[i];
+
+                        this.ctx.beginPath();
+                        // Draw elliptical petal
+                        this.ctx.ellipse(p.x, p.y, p.size, p.size * 0.6, p.angle, 0, Math.PI * 2);
+                        this.ctx.fill();
+
+                        // Move
+                        p.y += p.speed;
+                        p.x += Math.sin(p.angle) * 0.5; // Sway
+                        p.angle += 0.01; // Rotate slowly
+
+                        // Wrap around
+                        if (p.y > this.height) {
+                            p.y = -10;
+                            p.x = Math.random() * this.width;
+                        }
+                        if (p.x > this.width) p.x = 0;
+                        if (p.x < 0) p.x = this.width;
+                    }
+                }
+
+                this.animId = requestAnimationFrame(() => this.loop());
+            }
+        };
+
+        // Init FX
+        BackgroundFX.init();
+        BackgroundFX.setTheme(currentTheme);
 
         function t(key) {
             return i18n[currentLang][key] || key;
@@ -1481,135 +1567,6 @@
         }
 
 
-        // --- Capture Logic ---
-        function captureCard(symbol = null) {
-            console.log("Capture trigged for", symbol);
-
-            // If no symbol passed (global button), try lastBestOpp
-            if (!symbol) {
-                if (lastBestOpp && lastBestOpp.symbol) {
-                    symbol = lastBestOpp.symbol;
-                    console.log("Using best opp:", symbol);
-                } else {
-                    alert("Debug: No data available (lastBestOpp is null). Wait for data scan.");
-                    return;
-                }
-            }
-
-            const card = document.getElementById(`card-${symbol}`);
-            if (!card) {
-                alert(`Debug: Card Element not found for ${symbol}`);
-                return;
-            }
-
-            // 1. Extract Data
-            const price = card.querySelector('.price-tag').innerText;
-            const apr = card.querySelector('.hero-value').innerText;
-            // Get action badges text
-            const longText = card.querySelector('.badge-long').innerText;
-            const shortText = card.querySelector('.badge-short').innerText;
-
-            // 2. Create Temporary Snapshot Container
-            const snapshot = document.createElement('div');
-            snapshot.style.position = 'fixed'; // Use fixed to ensure it renders relative to viewport if needed
-            snapshot.style.left = '-9999px';   // Move off-screen horizontally
-            snapshot.style.top = '0';
-            snapshot.style.width = '600px';
-            snapshot.style.padding = '40px';
-            snapshot.style.background = getComputedStyle(card).backgroundColor;
-            snapshot.style.border = `1px solid ${getComputedStyle(card).borderColor}`;
-            snapshot.style.borderRadius = '16px';
-            snapshot.style.fontFamily = "'JetBrains Mono', monospace";
-            snapshot.style.color = getComputedStyle(document.body).color;
-            snapshot.style.display = 'flex';
-            snapshot.style.flexDirection = 'column';
-            snapshot.style.alignItems = 'center';
-            snapshot.style.justifyContent = 'center';
-            snapshot.style.gap = '20px';
-            snapshot.style.boxShadow = getComputedStyle(card).boxShadow;
-            snapshot.style.zIndex = '9999'; // Ensure it's on top of everything (even if offscreen)
-
-            // 3. Build Simplified Content
-            snapshot.innerHTML = `
-                <div style="font-size: 14px; opacity: 0.7; letter-spacing: 2px;">FUNDING ARBITRAGE</div>
-                <div style="font-size: 48px; font-weight: bold; display:flex; align-items:baseline; gap:10px;">
-                    ${symbol} <span style="font-size: 20px; opacity: 0.6; font-weight:normal;">${price}</span>
-                </div>
-                
-                <div style="font-size: 15px; display:flex; gap:15px; margin-top:10px;">
-                    <span style="background:rgba(0, 255, 157, 0.15); color:#00ff9d; padding:5px 12px; border-radius:4px; border:1px solid rgba(0, 255, 157, 0.3);">${longText}</span>
-                    <span style="background:rgba(255, 0, 85, 0.15); color:#ff0055; padding:5px 12px; border-radius:4px; border:1px solid rgba(255, 0, 85, 0.3);">${shortText}</span>
-                </div>
-
-                <div style="margin: 20px 0; text-align: center;">
-                    <div style="font-size: 12px; color: var(--gold); letter-spacing: 1px; margin-bottom:5px;">SPREAD APR</div>
-                    <div style="font-size: 80px; font-weight: bold; color: var(--gold); text-shadow: 0 0 30px rgba(255, 204, 0, 0.3); line-height:1;">
-                        ${apr}
-                    </div>
-                </div>
-
-                <div style="margin-top: 20px; font-size: 12px; opacity: 0.4; letter-spacing: 1.5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; width: 100%; text-align: center;">
-                    ${new Date().toLocaleString()}
-                    <br>
-                    <span style="font-size: 10px; margin-top: 5px; display: inline-block;">POWERED BY <b>FUNDING MONITOR</b></span>
-                </div>
-            `;
-
-            document.body.appendChild(snapshot);
-
-            // 4. Capture
-            html2canvas(snapshot, {
-                backgroundColor: null,
-                scale: 2,
-                logging: true, // Enable logging for debug
-                useCORS: true  // Handle any potential external font/image issues
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                showSnapshotModal(imgData, symbol);
-                document.body.removeChild(snapshot);
-            }).catch(err => {
-                console.error("Snapshot failed:", err);
-                alert("Snapshot failed. Check console for details: " + err);
-                if (document.body.contains(snapshot)) document.body.removeChild(snapshot);
-            });
-        }
-
-        // --- Snapshot Modal Logic ---
-        let currentSnapshotUrl = '';
-        let currentSnapshotSymbol = '';
-
-        function showSnapshotModal(dataUrl, symbol) {
-            const modal = document.getElementById('snapshot-modal');
-            const preview = document.getElementById('snapshot-preview');
-
-            currentSnapshotUrl = dataUrl;
-            currentSnapshotSymbol = symbol;
-
-            preview.src = dataUrl;
-            modal.classList.add('active');
-        }
-
-        function closeSnapshotModal() {
-            const modal = document.getElementById('snapshot-modal');
-            modal.classList.remove('active');
-        }
-
-        function downloadSnapshot() {
-            if (!currentSnapshotUrl) return;
-
-            const link = document.createElement('a');
-            link.download = `funding-${currentSnapshotSymbol}-${Date.now()}.png`;
-            link.href = currentSnapshotUrl;
-            link.click();
-
-            closeSnapshotModal(); // Optional: close after download
-        }
-
-        // Close modal on click outside
-        document.getElementById('snapshot-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'snapshot-modal') closeSnapshotModal();
-        });
-
         // --- Range Logic ---
         function setRange(symbol, rangeName) {
             const limit = RANGES[rangeName];
@@ -1704,7 +1661,6 @@
                     0).toFixed(2)}%</span>
                             </div>
                         </div>
-                        
                     </div>
                     <div class="hero-stat">
                         <div class="header-label" data-i18n="zen_label">${t('zen_label')}</div>
@@ -1717,9 +1673,6 @@
                                 style="font-family: 'JetBrains Mono'; color: var(--text-primary);">--:--</span>
                         </div>
                     </div>
-                    
-                    </div>
-                    
                 </div>
 
                 <div class="card-content">
@@ -1841,24 +1794,46 @@
                 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 let html = '';
 
-                // Loop 7 days
-                for (let d = 0; d < 7; d++) { // Label Cell html +=`<div class="hm-label">${days[d]}</div>`;
+                // 1. Header Row (Hours)
+                html += `<div></div>`; // Top limit corner
+                for (let h = 0; h < 24; h++) {
+                    // Show label every 3 hours for cleaner look, or small font for all
+                    const label = h % 3 === 0 ? h.toString().padStart(2, '0') : '.';
+                    html += `<div class="hm-header-label">${label}</div>`;
+                }
 
-                    // Hour Cells
+                // 2. Data Rows
+                for (let d = 0; d < 7; d++) {
+                    // Day Label
+                    html += `<div class="hm-label">${days[d]}</div>`;
+
                     // Hour Cells
                     for (let h = 0; h < 24; h++) {
                         const val = parseFloat(gridMap[d][h]) || 0;
-                        let color = 'rgba(255, 255, 255, 0.05)'; // Base empty 
-                        if (val > 0) {
-                            const intensity = Math.min(val / 20, 1); // Cap at 20% APR for max glow
-                            // Use Solar Gold for spread intensity to highlight profit opportunity
-                            color = `rgba(255, 204, 0, ${0.1 + intensity * 0.9})`;
-                        }
-                    }
+                        let color = 'rgba(255, 255, 255, 0.02)'; // Base empty 
+                        let border = 'none';
 
-                    html += `<div class="hm-cell" style="background:${color}"
-                        data-tooltip="${days[d]} ${h}:00 | ${t('zen_label')}: ${val.toFixed(2)}%"></div>`;
-                } // End for(d)
+                        if (val > 0) {
+                            // Intensity Logic: 0% -> 20% scale
+                            const intensity = Math.min(val / 20, 1);
+
+                            // Color Scale: Green -> Yellow -> Red (Turbo-ish) or Monochromatic
+                            // Let's use a "Hot" scale: Low=Green, Mid=Yellow, High=Red
+                            // Hue: 120 (Green) -> 60 (Yellow) -> 0 (Red)
+                            const hue = 120 - (intensity * 120);
+                            const lightness = 20 + (intensity * 30); // 20% -> 50%
+
+                            color = `hsla(${hue}, 100%, ${lightness}%, 0.8)`;
+
+                            if (val > 20) {
+                                border = '1px solid #fff'; // Highlight extreme
+                            }
+                        }
+
+                        html += `<div class="hm-cell" style="background:${color}; border:${border}"
+                            data-tooltip="${days[d]} ${h}:00 | ${t('zen_label')}: ${val.toFixed(2)}%"></div>`;
+                    }
+                }
 
                 container.innerHTML = html;
 

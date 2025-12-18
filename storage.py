@@ -128,8 +128,8 @@ class StorageManager:
                     GROUP BY exchange, bucket
                 )
                 SELECT 
-                    strftime('%w', datetime(bucket * 60, 'unixepoch', 'localtime')) as weekday,
-                    strftime('%H', datetime(bucket * 60, 'unixepoch', 'localtime')) as hour,
+                    strftime('%w', datetime(r1.bucket * 60, 'unixepoch', 'localtime')) as weekday,
+                    strftime('%H', datetime(r1.bucket * 60, 'unixepoch', 'localtime')) as hour,
                     AVG(ABS(r1.funding_rate - r2.funding_rate) * 24 * 365 * 100) as avg_spread_apr,
                     COUNT(*) as data_points
                 FROM aggregated r1
