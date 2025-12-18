@@ -1783,10 +1783,29 @@
                 const gridMap = Array(7).fill().map(() => Array(24).fill(0));
                 let maxVal = 0;
 
+                // Client-side Timezone Adjustment
+                // offset is in minutes, e.g., -480 for UTC+8 (Taipei/Beijing) or -540 for UTC+9 (Tokyo)
+                // We need to ADD the offset (negative of offset) to convert UTC to Local
+                const offsetMinutes = new Date().getTimezoneOffset() * -1;
+                const offsetHours = Math.floor(offsetMinutes / 60);
+
                 stats.forEach(s => {
-                    const w = parseInt(s.weekday); // 0=Sun
-                    const h = parseInt(s.hour);
+                    let w = parseInt(s.weekday); // 0=Sun (UTC)
+                    let h = parseInt(s.hour);    // 0-23 (UTC)
                     const val = s.avg_spread_apr;
+
+                    // Shift Hour
+                    h += offsetHours;
+
+                    // Handle Day Wrap
+                    if (h >= 24) {
+                        h -= 24;
+                        w = (w + 1) % 7;
+                    } else if (h < 0) {
+                        h += 24;
+                        w = (w - 1 + 7) % 7;
+                    }
+
                     gridMap[w][h] = val;
                     if (val > maxVal) maxVal = val;
                 });
