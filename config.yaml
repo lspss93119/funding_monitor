@@ -1,0 +1,14 @@
+# Funding Monitor Configuration
+
+symbols:
+  - BTC-PERP
+
+# Polling frequency in seconds
+polling_interval: 30
+
+# Warning thresholds
+thresholds:
+  # Absolute funding rate value (e.g., 0.001 = 0.1%)
+  absolute: 0.001
+  # Difference between exchanges (e.g., 0.0005 = 0.05%)
+  difference: 0.0005
