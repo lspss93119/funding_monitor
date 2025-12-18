@@ -1483,18 +1483,24 @@
 
         // --- Capture Logic ---
         function captureCard(symbol = null) {
+            console.log("Capture trigged for", symbol);
+
             // If no symbol passed (global button), try lastBestOpp
             if (!symbol) {
                 if (lastBestOpp && lastBestOpp.symbol) {
                     symbol = lastBestOpp.symbol;
+                    console.log("Using best opp:", symbol);
                 } else {
-                    alert("No data available to snapshot yet.");
+                    alert("Debug: No data available (lastBestOpp is null). Wait for data scan.");
                     return;
                 }
             }
 
             const card = document.getElementById(`card-${symbol}`);
-            if (!card) return;
+            if (!card) {
+                alert(`Debug: Card Element not found for ${symbol}`);
+                return;
+            }
 
             // 1. Extract Data
             const price = card.querySelector('.price-tag').innerText;
