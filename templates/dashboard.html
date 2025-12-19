@@ -1203,6 +1203,11 @@
                 }
             },
 
+            setSpeed: function (multiplier) {
+                this.speedMultiplier = multiplier;
+            },
+            speedMultiplier: 0.5, // Default slow
+
             loop: function () {
                 if (this.theme === 'default') return;
 
@@ -1242,11 +1247,11 @@
                         if (this.drops[i] * 20 > this.height && Math.random() > 0.975) {
                             this.drops[i] = 0;
                         }
-                        this.drops[i]++;
+                        this.drops[i] += 1 * this.speedMultiplier;
                     }
                 } else if (this.theme === 'cyberpunk') {
                     // Neon Rain (Variable Speed + Glitch Colors)
-                    const colors = ['#00F0FF', '#FF0055', '#BC13FE', '#FIEE00']; // Cyan, Pink, Purple, Yellow
+                    const colors = ['#00F0FF', '#FF0055', '#BC13FE', '#FFCC00']; // Cyan, Pink, Purple, Yellow
 
                     for (let i = 0; i < this.drops.length; i++) {
                         // Use stored speed or default
@@ -1272,7 +1277,7 @@
                             // Randomize speed for next fall (0.5 to 2.0)
                             this.speeds[i] = 0.5 + Math.random() * 1.5;
                         }
-                        this.drops[i] += speed;
+                        this.drops[i] += speed * this.speedMultiplier;
                     }
                 } else if (this.theme === 'zen') {
                     // Cherry Blossom Render
@@ -1287,9 +1292,9 @@
                         this.ctx.fill();
 
                         // Move
-                        p.y += p.speed;
-                        p.x += Math.sin(p.angle) * 0.5; // Sway
-                        p.angle += 0.01; // Rotate slowly
+                        p.y += p.speed * this.speedMultiplier;
+                        p.x += Math.sin(p.angle) * 0.5 * this.speedMultiplier; // Sway
+                        p.angle += 0.01 * this.speedMultiplier; // Rotate slowly
 
                         // Wrap around
                         if (p.y > this.height) {
@@ -1449,6 +1454,13 @@
         }
 
         function checkAlerts(spreadAPR) {
+            // Speed Control
+            if (spreadAPR > alertThreshold) {
+                BackgroundFX.setSpeed(2.0); // Fast Mode
+            } else {
+                BackgroundFX.setSpeed(0.5); // Chill Mode
+            }
+
             // Sound
             if (soundEnabled) {
                 if (spreadAPR > alertThreshold && (Date.now() - lastAlertTime > 60000)) {
