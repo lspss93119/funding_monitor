@@ -176,9 +176,23 @@
             text-shadow: 0 0 10px #00f2ff, 0 0 20px #00f2ff;
         }
 
+        /* Cyberpunk High Glow */
         [data-theme="cyberpunk"] .hero-value.high {
             color: #FFEE00;
             text-shadow: 0 0 10px #FFEE00, 0 0 20px #FFEE00, 0 0 40px #FFEE00;
+            animation: cyber-pulse 0.8s infinite alternate;
+        }
+
+        @keyframes cyber-pulse {
+            from {
+                text-shadow: 0 0 10px #FFEE00, 0 0 20px #FFEE00;
+                color: #FFEE00;
+            }
+
+            to {
+                text-shadow: 0 0 20px #00f2ff, 0 0 40px #00f2ff, 0 0 60px #00f2ff;
+                color: #fff;
+            }
         }
 
         /* Theme: Zen (Soft Paper) */
@@ -210,8 +224,23 @@
         [data-theme="zen"] .hero-value.high {
             color: #d4af37;
             /* Metallic Gold */
-            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1), 0 0 15px rgba(212, 175, 55, 0.3);
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1), 0 0 15px rgba(212, 175, 55, 0.4);
             font-weight: 800;
+            animation: zen-shimmer 3s infinite ease-in-out;
+        }
+
+        @keyframes zen-shimmer {
+
+            0%,
+            100% {
+                color: #d4af37;
+                text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            }
+
+            50% {
+                color: #f1c40f;
+                text-shadow: 0 0 25px rgba(241, 196, 15, 0.6);
+            }
         }
 
         /* Theme: Pro (Bloomberg Terminal) */
@@ -454,8 +483,29 @@
         /* High Opportunity Glow */
         .card.opportunity {
             border-color: var(--gold);
-            box-shadow: 0 0 40px rgba(255, 204, 0, 0.15);
+            box-shadow: 0 0 80px rgba(255, 204, 0, 0.3);
             animation: pulse-gold-border 3s infinite;
+        }
+
+        /* Cyberpunk Edge */
+        [data-theme="cyberpunk"] .card.opportunity {
+            border-color: #00f2ff;
+            box-shadow: 0 0 80px rgba(0, 242, 255, 0.4);
+            animation: pulse-cyber-border 2s infinite alternate;
+        }
+
+        /* Matrix Edge */
+        [data-theme="pro"] .card.opportunity {
+            border-color: #00FF41;
+            box-shadow: 0 0 60px rgba(0, 255, 65, 0.4), inset 0 0 40px rgba(0, 255, 65, 0.2);
+            animation: pulse-matrix-border 1.5s infinite alternate;
+        }
+
+        /* Zen Edge (Refined) */
+        [data-theme="zen"] .card.opportunity {
+            border-color: #d4af37;
+            box-shadow: 0 20px 80px rgba(212, 175, 55, 0.4);
+            animation: pulse-zen-border 3s infinite ease-in-out;
         }
 
         .card-header {
@@ -469,17 +519,59 @@
         /* Animations */
         @keyframes pulse-gold-border {
             0% {
-                box-shadow: 0 0 0 1px var(--gold), 0 0 20px rgba(210, 153, 34, 0.2);
+                border-color: rgba(255, 204, 0, 0.5);
+                box-shadow: 0 0 40px rgba(255, 204, 0, 0.2);
             }
 
             50% {
-                box-shadow: 0 0 0 1px var(--gold), 0 0 80px rgba(210, 153, 34, 0.5);
+                border-color: rgba(255, 204, 0, 1);
+                box-shadow: 0 0 100px rgba(255, 204, 0, 0.5);
             }
 
             100% {
-                box-shadow: 0 0 0 1px var(--gold), 0 0 20px rgba(210, 153, 34, 0.2);
+                border-color: rgba(255, 204, 0, 0.5);
+                box-shadow: 0 0 40px rgba(255, 204, 0, 0.2);
             }
         }
+
+        @keyframes pulse-cyber-border {
+            from {
+                border-color: #00f2ff;
+                box-shadow: 0 0 40px rgba(0, 242, 255, 0.5);
+            }
+
+            to {
+                border-color: #ff0055;
+                box-shadow: 0 0 120px rgba(255, 0, 85, 0.8);
+            }
+        }
+
+        @keyframes pulse-matrix-border {
+            from {
+                border-color: #00FF41;
+                box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+            }
+
+            to {
+                border-color: #d1ffdb;
+                box-shadow: 0 0 80px rgba(0, 255, 65, 0.7);
+            }
+        }
+
+        @keyframes pulse-zen-border {
+
+            0%,
+            100% {
+                border-color: #d4af37;
+                box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+            }
+
+            50% {
+                border-color: #f1c40f;
+                box-shadow: 0 30px 150px rgba(241, 196, 15, 0.6);
+            }
+        }
+
 
         @keyframes flash-green {
             0% {
@@ -1206,21 +1298,27 @@
             setSpeed: function (multiplier) {
                 this.speedMultiplier = multiplier;
             },
-            speedMultiplier: 0.5, // Default slow
+            setIntensity: function (isHigh) {
+                this.highIntensity = isHigh;
+            },
+            speedMultiplier: 0.5,
+            highIntensity: false,
 
             loop: function () {
                 if (this.theme === 'default') return;
 
                 // --- Shared Clear Logic ---
                 if (this.theme === 'zen') {
-                    this.ctx.clearRect(0, 0, this.width, this.height); // Full clear for zen (no trails)
+                    this.ctx.clearRect(0, 0, this.width, this.height);
                 }
                 else {
-                    // Trails for Pro/Cyberpunk
+                    // Trails
                     if (this.theme === 'pro') {
-                        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                        // Matrix Trail
+                        this.ctx.fillStyle = this.highIntensity ? 'rgba(0, 20, 0, 0.1)' : 'rgba(0, 0, 0, 0.05)';
                     } else if (this.theme === 'cyberpunk') {
-                        this.ctx.fillStyle = 'rgba(5, 0, 10, 0.1)';
+                        // Cyberpunk Trail
+                        this.ctx.fillStyle = this.highIntensity ? 'rgba(20, 0, 40, 0.15)' : 'rgba(5, 0, 10, 0.1)';
                     }
                     this.ctx.fillRect(0, 0, this.width, this.height);
                 }
@@ -1229,14 +1327,17 @@
 
                 if (this.theme === 'pro') {
                     // Matrix Green Palette
-                    this.ctx.shadowBlur = 0; // Performance
+                    this.ctx.shadowBlur = this.highIntensity ? 5 : 0; // Glow on High
+                    this.ctx.shadowColor = '#00FF41';
+
                     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZDOMHTXMATRIXｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ';
 
                     for (let i = 0; i < this.drops.length; i++) {
                         const char = chars.charAt(Math.floor(Math.random() * chars.length));
 
                         // Randomize green brightness
-                        if (Math.random() > 0.95) {
+                        // High Intensity: More white glitches
+                        if (Math.random() > (this.highIntensity ? 0.8 : 0.95)) {
                             this.ctx.fillStyle = '#fff';
                         } else {
                             this.ctx.fillStyle = '#00FF41';
@@ -1250,53 +1351,49 @@
                         this.drops[i] += 1 * this.speedMultiplier;
                     }
                 } else if (this.theme === 'cyberpunk') {
-                    // Neon Rain (Variable Speed + Glitch Colors)
-                    const colors = ['#00F0FF', '#FF0055', '#BC13FE', '#FFCC00']; // Cyan, Pink, Purple, Yellow
+                    // Neon Rain
+                    const colors = ['#00F0FF', '#FF0055', '#BC13FE', '#FFCC00'];
 
                     for (let i = 0; i < this.drops.length; i++) {
-                        // Use stored speed or default
                         const speed = this.speeds[i] || 1;
-
-                        // Glitchy color selection
                         const color = colors[Math.floor(Math.random() * colors.length)];
                         this.ctx.fillStyle = color;
 
-                        // Add glow for Cyberpunk
-                        // Note: shadowBlur is expensive, use sparingly or simulate with alpha
-                        // this.ctx.shadowBlur = 5;
-                        // this.ctx.shadowColor = color;
+                        // High Intensity: Add Glow
+                        if (this.highIntensity) {
+                            this.ctx.shadowBlur = 5;
+                            this.ctx.shadowColor = color;
+                        } else {
+                            this.ctx.shadowBlur = 0;
+                        }
 
                         const text = Math.random() > 0.8 ? '1' : '0';
-                        // Occasional "Glitch" character (Katakana or blocked)
                         const char = Math.random() > 0.98 ? String.fromCharCode(0x30A0 + Math.random() * 96) : text;
 
                         this.ctx.fillText(char, i * 20, this.drops[i] * 20);
 
                         if (this.drops[i] * 20 > this.height && Math.random() > 0.95) {
                             this.drops[i] = 0;
-                            // Randomize speed for next fall (0.5 to 2.0)
                             this.speeds[i] = 0.5 + Math.random() * 1.5;
                         }
                         this.drops[i] += speed * this.speedMultiplier;
                     }
                 } else if (this.theme === 'zen') {
-                    // Cherry Blossom Render
-                    this.ctx.fillStyle = 'rgba(255, 182, 193, 0.6)'; // Soft Pink
+                    // Cherry Blossom
+                    // High Intensity: Gold Petals
+                    this.ctx.fillStyle = this.highIntensity ? 'rgba(212, 175, 55, 0.8)' : 'rgba(255, 182, 193, 0.6)';
 
                     for (let i = 0; i < this.drops.length; i++) {
                         const p = this.drops[i];
 
                         this.ctx.beginPath();
-                        // Draw elliptical petal
                         this.ctx.ellipse(p.x, p.y, p.size, p.size * 0.6, p.angle, 0, Math.PI * 2);
                         this.ctx.fill();
 
-                        // Move
                         p.y += p.speed * this.speedMultiplier;
-                        p.x += Math.sin(p.angle) * 0.5 * this.speedMultiplier; // Sway
-                        p.angle += 0.01 * this.speedMultiplier; // Rotate slowly
+                        p.x += Math.sin(p.angle) * 0.5 * this.speedMultiplier;
+                        p.angle += 0.01 * this.speedMultiplier;
 
-                        // Wrap around
                         if (p.y > this.height) {
                             p.y = -10;
                             p.x = Math.random() * this.width;
@@ -1454,11 +1551,13 @@
         }
 
         function checkAlerts(spreadAPR) {
-            // Speed Control
+            // Speed & Intensity Control
             if (spreadAPR > alertThreshold) {
                 BackgroundFX.setSpeed(2.0); // Fast Mode
+                BackgroundFX.setIntensity(true); // High Glow/Visuals
             } else {
                 BackgroundFX.setSpeed(0.5); // Chill Mode
+                BackgroundFX.setIntensity(false);
             }
 
             // Sound
@@ -1582,31 +1681,43 @@
 
         function updateZen(bestData = null) {
             if (!zenMode) return;
-
-            // If data explicitly passed (from loop), use it. Or if we just toggled, need scan.
-            // Actually, best approach: loop calls this every time.
-
             if (!bestData) return;
 
             zenSymbol.textContent = bestData.symbol;
             zenValue.textContent = bestData.apr.toFixed(2) + '%';
 
             // Breathing Effect
-            // Base dark blue #0d1117 (13,17,23)
-            // Pulse to Gold #FFCC00 (255, 204, 0) based on APR
-            // Intensity 0 to 1
             const intensity = Math.min(bestData.apr / 20, 1);
-
-            // Interpolate color roughly (simple overlay alpha)
-            // Low alert: Blueish. High alert: Gold pulse.
-            const alpha = 0.2 + (intensity * 0.3); // 0.2 to 0.5 opacity of gold
+            const alpha = 0.2 + (intensity * 0.3);
 
             if (bestData.apr > alertThreshold) {
-                zenOverlay.style.background = `rgba(50, 40, 0, ${1})`; // Dark Goldish
-                zenOverlay.style.boxShadow = `inset 0 0 ${100 * intensity}px #ffcc00`;
+                if (currentTheme === 'cyberpunk') {
+                    // Cyberpunk: Dark Purple + Neon Cyan/Yellow Pulse
+                    zenOverlay.style.background = `rgba(20, 0, 40, ${0.9 + intensity * 0.1})`;
+                    zenOverlay.style.boxShadow = `inset 0 0 ${150 * intensity}px #00f2ff, inset 0 0 ${50 * intensity}px #FFEE00`;
+                    zenValue.style.textShadow = `0 0 20px #FFEE00, 0 0 40px #00f2ff`;
+                } else if (currentTheme === 'pro') {
+                    // Matrix: Black + Green Pulse
+                    zenOverlay.style.background = `rgba(0, 10, 0, ${0.95})`;
+                    zenOverlay.style.boxShadow = `inset 0 0 ${100 * intensity}px #00FF41`;
+                    zenValue.style.textShadow = `0 0 20px #00FF41, 0 0 40px #d1ffdb`;
+                } else {
+                    // Zen (Default): Gold
+                    zenOverlay.style.background = `rgba(50, 40, 0, ${1})`;
+                    zenOverlay.style.boxShadow = `inset 0 0 ${100 * intensity}px #d4af37`; // Metallic Gold
+                    zenValue.style.textShadow = `none`;
+                }
             } else {
-                zenOverlay.style.background = '#0d1117';
+                // Chill State
+                if (currentTheme === 'cyberpunk') {
+                    zenOverlay.style.background = 'rgba(9, 9, 16, 0.95)';
+                } else if (currentTheme === 'pro') {
+                    zenOverlay.style.background = '#000000';
+                } else {
+                    zenOverlay.style.background = '#0d1117';
+                }
                 zenOverlay.style.boxShadow = 'none';
+                zenValue.style.textShadow = 'none';
             }
         }
 
