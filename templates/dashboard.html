@@ -1486,10 +1486,6 @@
                 };
             }
         }
-        function getDirectionHint(rate) {
-            // Deprecated direct HTML return, use helpers
-            return "";
-        }
 
         function getHintKey(rate) {
             if (rate > 0) return 'hint_long_pays';
@@ -2287,7 +2283,6 @@
                                     <div class="ex-rate ${d.funding_rate > 0 ? 'text-pos' : 'text-neg'}"
                                         style="color:${d.funding_rate > 0 ? 'var(--positive)' : 'var(--negative)'}">
                                         ${fmt.pct(d.funding_rate)}
-                                        ${getDirectionHint(d.funding_rate)}
                                     </div>
                                     <div class="ex-meta">
                                         <div class="ex-apr">APR: ${fmt.apr(d.funding_rate)}</div>
