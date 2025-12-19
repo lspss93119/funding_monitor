@@ -101,7 +101,18 @@ class FundingMonitor:
                         await self._process_data(data)
                 
                 self._check_comparisons()
-                await asyncio.sleep(self.interval)
+                try:
+                    await self.storage.save_data(self.latest_data)
+                except Exception as e:
+                    logger.error(f"Error saving data: {e}")
+                
+                # Calculate sleep time to align with the next interval mark (e.g., :00, :30)
+                # This ensures we fetch exactly at the top of the hour/minute as requested.
+                now_ts = datetime.now().timestamp()
+                sleep_duration = self.interval - (now_ts % self.interval)
+                
+                # Add a tiny buffer to avoid double-firing or slightly early wakeups
+                await asyncio.sleep(sleep_duration + 0.1)
         finally:
             await runner.cleanup()
 

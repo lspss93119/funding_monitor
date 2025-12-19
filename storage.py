@@ -125,6 +125,10 @@ class StorageManager:
                         AVG(funding_rate) as funding_rate
                     FROM funding_history
                     WHERE symbol = ?
+                      -- Filter STRICTLY for top of the hour (00 min, 00 sec range)
+                      -- Polling is every 30s (:00, :30). 
+                      -- We want to exclude :30, so window must be < 30s.
+                      AND (timestamp % 3600) < 25
                     GROUP BY exchange, bucket
                 )
                 SELECT 
